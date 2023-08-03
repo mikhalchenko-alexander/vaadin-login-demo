@@ -1,0 +1,16 @@
+html {
+    background-color: aliceblue;
+}
+
+vaadin-button::part(label) {
+    color: aqua;
+}
+
+vaadin-text-field::part(label) {
+    color: red;
+}
+
+vaadin-text-field::part(input-field) {
+    background-color: lightgreen;
+    color: blue;
+}
