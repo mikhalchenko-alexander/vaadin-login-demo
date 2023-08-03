@@ -26,6 +26,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.seleniumhq.selenium:selenium-java")
+	testImplementation("io.github.bonigarcia:webdrivermanager:5.4.1")
 }
 
 dependencyManagement {

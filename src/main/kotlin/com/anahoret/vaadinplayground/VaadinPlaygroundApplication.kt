@@ -30,6 +30,9 @@ class MainView() : HorizontalLayout() {
 	private val sayHello: Button = Button("Say hello")
 
 	init {
+		name.setId("name-input")
+		sayHello.setId("submit-button")
+
 		sayHello.addClickListener { e -> Notification.show("Hello " + name.value) }
 		sayHello.addClickShortcut(Key.ENTER)
 		isMargin = true
