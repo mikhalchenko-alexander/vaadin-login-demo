@@ -10,10 +10,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.router.BeforeEnterEvent
-import com.vaadin.flow.router.BeforeEnterObserver
-import com.vaadin.flow.router.PageTitle
-import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.*
 import com.vaadin.flow.server.auth.AnonymousAllowed
 import com.vaadin.flow.spring.security.AuthenticationContext
 import com.vaadin.flow.spring.security.VaadinWebSecurity
@@ -23,10 +20,8 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -91,9 +86,9 @@ class MainLayout(private val authContext: AuthenticationContext) : AppLayout() {
 
 
 @PageTitle("Main")
-@Route("", layout = MainLayout::class)
+@Route("login", layout = MainLayout::class)
 @AnonymousAllowed
-class MainView : VerticalLayout(), BeforeEnterObserver {
+class MainView(private val authContext: AuthenticationContext) : VerticalLayout(), BeforeEnterObserver {
 
     private val login = LoginForm()
 
@@ -110,6 +105,9 @@ class MainView : VerticalLayout(), BeforeEnterObserver {
     }
 
     override fun beforeEnter(beforeEnterEvent: BeforeEnterEvent) {
+        if (authContext.isAuthenticated) {
+            beforeEnterEvent.forwardTo(PrivateView::class.java)
+        }
         // inform the user about an authentication error
         if (beforeEnterEvent.location
                 .queryParameters
@@ -123,7 +121,8 @@ class MainView : VerticalLayout(), BeforeEnterObserver {
 }
 
 @PageTitle("Private page")
-@Route("private", layout = MainLayout::class)
+@Route("", layout = MainLayout::class)
+@RouteAlias("private", layout = MainLayout::class)
 @PermitAll
 class PrivateView() : HorizontalLayout() {
     private val label: Span = Span("This is private page")
